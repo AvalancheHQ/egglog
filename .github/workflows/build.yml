@@ -41,6 +41,7 @@ jobs:
         with:
           run: cargo codspeed run
           mode: ${{ matrix.runner == 'ubuntu-latest' && 'instrumentation' || 'walltime' }}
+          upload-url: https://api.staging.preview.codspeed.io/upload
   wasm:
     runs-on: ubuntu-latest
     steps:
