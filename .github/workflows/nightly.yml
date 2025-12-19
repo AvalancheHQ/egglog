@@ -5,6 +5,10 @@ on:
     - cron: '0 3 * * *'  # every night at 3 AM UTC
   workflow_dispatch:
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   nightly-benchmark:
     runs-on: ubuntu-latest
@@ -19,7 +23,8 @@ jobs:
           cd egglog-benchmarks
           git checkout 4e9061a2c3cf19cc070261e0f486e49439c20c22
       - uses: Swatinem/rust-cache@v2
-      - run: cargo codspeed build nightly_benchmarking -m walltime
-      - uses: CodSpeedHQ/action@v3
+      - run: cargo codspeed build nightly_benchmarking
+      - uses: CodSpeedHQ/action@v4
         with:
-          run: cargo codspeed run nightly_benchmarking -m walltime
+          mode: simulation
+          run: cargo codspeed run nightly_benchmarking

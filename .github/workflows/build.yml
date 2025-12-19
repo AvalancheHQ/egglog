@@ -1,11 +1,13 @@
 name: Build
-
-on:
+'on':
   push:
     branches:
-      - "main"
-  pull_request:
-  workflow_dispatch:
+    - main
+  pull_request: null
+  workflow_dispatch: null
+permissions:
+  contents: read
+  id-token: write
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,24 +29,26 @@ jobs:
   benchmark:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "CARGO_INCREMENTAL=0" >> "$GITHUB_ENV"
-      - uses: actions/checkout@v4
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: cargo-codspeed
-      - uses: Swatinem/rust-cache@v2
-      - run: cargo codspeed build
-      - uses: CodSpeedHQ/action@v3
-        with:
-          run: cargo codspeed run
+    - run: echo "CARGO_INCREMENTAL=0" >> "$GITHUB_ENV"
+    - uses: actions/checkout@v4
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-codspeed
+    - uses: Swatinem/rust-cache@v2
+    - run: cargo codspeed build
+    - uses: CodSpeedHQ/action@v4
+      with:
+        upload-url: ${{ secrets.CODSPEED_STAGING_UPLOAD_URL }}
+        mode: simulation
+        run: cargo codspeed run
   wasm:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "CARGO_INCREMENTAL=0" >> "$GITHUB_ENV"
-      - uses: actions/checkout@v4
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: wasm-pack
-      - uses: Swatinem/rust-cache@v2
-      - run: make test
-        working-directory: wasm-example
+    - run: echo "CARGO_INCREMENTAL=0" >> "$GITHUB_ENV"
+    - uses: actions/checkout@v4
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: wasm-pack
+    - uses: Swatinem/rust-cache@v2
+    - run: make test
+      working-directory: wasm-example
