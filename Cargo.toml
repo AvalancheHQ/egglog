@@ -62,7 +62,7 @@ chrono = { version = "0.4", default-features = false }
 ######################
 # dev dependencies
 ######################
-codspeed-criterion-compat = "2.7.2"
+codspeed-criterion-compat = "4.1.0"
 glob = "0.3.1"
 libtest-mimic = "0.8"
 divan = "0.1.15"
